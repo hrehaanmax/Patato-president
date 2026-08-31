@@ -36,9 +36,9 @@ button:hover{transform:scale(1.03)}
 .certificate{background:#fff8dc;color:#24170b;border:10px double #b8860b;border-radius:18px;padding:25px;margin:20px auto;max-width:720px}
 .certificate h1{color:#7b4d00}
 @media(max-width:700px){
- #app{padding:14px}
- .stats{grid-template-columns:repeat(2,1fr)}
- .phoneKeys{grid-template-columns:repeat(2,1fr)}
+#app{padding:14px}
+.stats{grid-template-columns:repeat(2,1fr)}
+.phoneKeys{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -98,7 +98,7 @@ button:hover{transform:scale(1.03)}
 <h2>Enemy Health: <span id="enemyHealth">100</span>%</h2>
 <div id="enemyPotato">🥔</div>
 <div id="warning">WAIT...</div>
-<h2>⏱️ <span id="timer">5</span></h2>
+<h2>⏱️ <span id="timer">3</span></h2>
 
 <div id="phoneControls" class="hidden">
 <p>📱 Tap the exact button shown!</p>
@@ -165,7 +165,7 @@ button:hover{transform:scale(1.03)}
 <p>You failed the war minigame.</p>
 <div class="roast">
 <h2>🔥 ROAST OF THE DAY 🔥</h2>
-<p>Bro had 5 whole seconds to press one button and still destroyed an entire country. 💀<br><br>Even a potato could've done better. 🥔😭</p>
+<p>Bro had 3 whole seconds to press one button and still destroyed an entire country. 💀<br><br>Even a potato could've done better. 🥔😭</p>
 </div>
 <button onclick="location.reload()">🔄 TRY AGAIN</button>
 </section>
@@ -177,34 +177,22 @@ let device="";
 let happiness=70,economy=70,safety=70,iq=20;
 let year=1,rounds=0,cash=0,lives=8;
 let requiredKey="",attackAllowed=false,enemyHealth=100;
-let attackTimeout=null,countdown=null,timeLeft=5;
+let attackTimeout=null,countdown=null,timeLeft=3;
 let usedEvents=[],usedCountries=[];
 
 const events=[
-["🐔 CHICKENS DEMAND VOTES!","The chickens want voting rights.",[
-["🗳️ Let them vote",10,5,5,5],["🚫 Say no",-10,0,-5,2],["🐔 Make a chicken president",15,10,-10,8]]],
-["🌧️ MASHED POTATO RAIN!","Mashed potatoes are falling from the sky.",[
-["🍴 Eat it",15,0,-5,0],["☂️ Make umbrellas",5,-10,5,5],["🚨 Declare emergency",-5,-5,15,2]]],
-["🧠 SMART POTATOES!","Potatoes are becoming smarter than the government.",[
-["🧪 Continue experiment",5,-10,5,20],["🚫 Stop experiment",5,10,10,-10],["👑 Hire them",15,15,10,15]]],
-["💸 TREASURY PROBLEM!","Someone ate the national treasury.",[
-["🔎 Investigate",-5,10,10,10],["🥔 Ask Kevin for money",5,20,-5,0],["🤷 Ignore it",10,-25,-10,-5]]],
-["🦆 ANGRY DUCKS!","The ducks claim potatoes stole their ponds.",[
-["🦆 Give them ponds",10,-10,10,2],["🥔 Steal more ponds",-10,10,-15,0],["🤝 Share everything",15,-5,5,5]]],
-["🚀 POTATO ON THE MOON!","Bob accidentally reached the moon.",[
-["🚀 Send more potatoes",15,-20,5,10],["📸 Sell the photo",5,20,0,2],["😐 Ignore Bob",-10,5,0,-5]]],
-["🍕 PIZZA TAX!","The government wants one slice of pizza from every potato.",[
-["🍕 Approve it",10,15,0,2],["🚫 Cancel it",-10,-10,5,3],["🥔 Replace pizza with potatoes",5,5,-5,5]]],
-["🎪 POTATO CIRCUS!","A potato circus wants government funding.",[
-["🎪 Fund it",15,-15,0,3],["🚫 Refuse",-10,10,5,0],["🎟️ Sell tickets",5,20,0,5]]],
-["📱 POTATO INTERNET!","Potatoes invented social media.",[
-["📱 Approve it",10,10,-5,5],["🚫 Ban it",-15,5,10,2],["🤳 Become famous",20,-5,-5,8]]],
-["🔥 MICROWAVE INCIDENT!","Someone microwaved the national potato.",[
-["🚒 Call firefighters",0,-5,15,2],["😂 Laugh about it",5,5,-5,5],["🥔 Blame Kevin",-5,10,0,0]]],
-["🏫 POTATO SCHOOL!","The potatoes want a new school.",[
-["🏫 Build it",10,-10,5,15],["🚫 Refuse",-10,10,-5,-5],["🧠 Make it a genius school",5,-20,5,25]]],
-["🏖️ POTATO HOLIDAY!","Everyone wants a national potato holiday.",[
-["🎉 Approve",15,-10,0,5],["🚫 Refuse",-10,5,5,0],["💰 Sell holiday tickets",5,20,-5,3]]]
+["🐔 CHICKENS DEMAND VOTES!","The chickens want voting rights.",[["🗳️ Let them vote",10,5,5,5],["🚫 Say no",-10,0,-5,2],["🐔 Make a chicken president",15,10,-10,8]]],
+["🌧️ MASHED POTATO RAIN!","Mashed potatoes are falling from the sky.",[["🍴 Eat it",15,0,-5,0],["☂️ Make umbrellas",5,-10,5,5],["🚨 Declare emergency",-5,-5,15,2]]],
+["🧠 SMART POTATOES!","Potatoes are becoming smarter than the government.",[["🧪 Continue experiment",5,-10,5,20],["🚫 Stop experiment",5,10,10,-10],["👑 Hire them",15,15,10,15]]],
+["💸 TREASURY PROBLEM!","Someone ate the national treasury.",[["🔎 Investigate",-5,10,10,10],["🥔 Ask Kevin for money",5,20,-5,0],["🤷 Ignore it",10,-25,-10,-5]]],
+["🦆 ANGRY DUCKS!","The ducks claim potatoes stole their ponds.",[["🦆 Give them ponds",10,-10,10,2],["🥔 Steal more ponds",-10,10,-15,0],["🤝 Share everything",15,-5,5,5]]],
+["🚀 POTATO ON THE MOON!","Bob accidentally reached the moon.",[["🚀 Send more potatoes",15,-20,5,10],["📸 Sell the photo",5,20,0,2],["😐 Ignore Bob",-10,5,0,-5]]],
+["🍕 PIZZA TAX!","The government wants one slice of pizza from every potato.",[["🍕 Approve it",10,15,0,2],["🚫 Cancel it",-10,-10,5,3],["🥔 Replace pizza with potatoes",5,5,-5,5]]],
+["🎪 POTATO CIRCUS!","A potato circus wants government funding.",[["🎪 Fund it",15,-15,0,3],["🚫 Refuse",-10,10,5,0],["🎟️ Sell tickets",5,20,0,5]]],
+["📱 POTATO INTERNET!","Potatoes invented social media.",[["📱 Approve it",10,10,-5,5],["🚫 Ban it",-15,5,10,2],["🤳 Become famous",20,-5,-5,8]]],
+["🔥 MICROWAVE INCIDENT!","Someone microwaved the national potato.",[["🚒 Call firefighters",0,-5,15,2],["😂 Laugh about it",5,5,-5,5],["🥔 Blame Kevin",-5,10,0,0]]],
+["🏫 POTATO SCHOOL!","The potatoes want a new school.",[["🏫 Build it",10,-10,5,15],["🚫 Refuse",-10,10,-5,-5],["🧠 Make it a genius school",5,-20,5,25]]],
+["🏖️ POTATO HOLIDAY!","Everyone wants a national potato holiday.",[["🎉 Approve",15,-10,0,5],["🚫 Refuse",-10,5,5,0],["💰 Sell holiday tickets",5,20,-5,3]]]
 ];
 
 const countries=[
@@ -220,7 +208,7 @@ const keys=[
 
 function startGame(d){
 device=d;
-lives=d==="phone"?8:8;
+lives=8;
 document.getElementById("startScreen").classList.add("hidden");
 document.getElementById("gameScreen").classList.remove("hidden");
 document.getElementById("deviceText").innerText=d==="phone"?"PHONE 📱":"LAPTOP 💻";
@@ -283,7 +271,7 @@ setTimeout(newEvent,600);
 }
 
 function declareWar(){
-if(attackAllowed||document.getElementById("warGame").classList.contains("hidden")===false)return;
+if(attackAllowed||!document.getElementById("warGame").classList.contains("hidden"))return;
 
 if(usedCountries.length===countries.length)usedCountries=[];
 
@@ -311,17 +299,19 @@ attackTimeout=setTimeout(showAttackPrompt,1000+Math.random()*2000);
 
 function showAttackPrompt(){
 attackAllowed=true;
-timeLeft=5;
+timeLeft=3;
 let k=keys[Math.floor(Math.random()*keys.length)];
 requiredKey=k[0];
+
 document.getElementById("warning").innerText="⚡ PRESS "+k[1]+"!";
 document.getElementById("warning").style.background="#d19c25";
 document.getElementById("battleText").innerText="ATTACK NOW!";
-document.getElementById("timer").innerText=5;
+document.getElementById("timer").innerText=3;
 
 countdown=setInterval(()=>{
 timeLeft--;
 document.getElementById("timer").innerText=timeLeft;
+
 if(timeLeft<=0){
 clearInterval(countdown);
 attackAllowed=false;
@@ -332,12 +322,16 @@ loseLife();
 
 document.addEventListener("keydown",e=>{
 if(device!=="laptop"||!attackAllowed)return;
-if(e.key===" "||e.key.startsWith("Arrow"))e.preventDefault();
+
+if(e.key===" "||e.key.startsWith("Arrow"))
+e.preventDefault();
+
 checkAttack(e.key);
 });
 
 function phoneKey(k){
-if(device==="phone"&&attackAllowed)checkAttack(k);
+if(device==="phone"&&attackAllowed)
+checkAttack(k);
 }
 
 function checkAttack(k){
@@ -375,7 +369,10 @@ setTimeout(startAttackWait,900);
 
 function successfulAttack(){
 enemyHealth-=25;
-if(enemyHealth<0)enemyHealth=0;
+
+if(enemyHealth<0)
+enemyHealth=0;
+
 document.getElementById("enemyHealth").innerText=enemyHealth;
 document.getElementById("warning").innerText="💥 HIT!";
 document.getElementById("warning").style.background="#3b8f45";
@@ -391,12 +388,17 @@ setTimeout(startAttackWait,800);
 function winWar(){
 clearInterval(countdown);
 clearTimeout(attackTimeout);
+
 document.getElementById("battleText").innerText="🏆 YOU WON THE WAR!";
 document.getElementById("warning").innerText="🎉 VICTORY!";
+
 happiness+=10;
 safety+=15;
+
 clamp();
 updateUI();
+
+if(checkWin())return;
 
 setTimeout(()=>{
 document.getElementById("warGame").classList.add("hidden");
@@ -422,13 +424,16 @@ document.getElementById("cash").innerText=0;
 function earnMoney(){
 cash+=5;
 document.getElementById("cash").innerText=cash;
+
 if(cash>=20){
 economy=30;
 clamp();
 updateUI();
+
 document.getElementById("moneyGame").classList.add("hidden");
 document.getElementById("eventPanel").classList.remove("hidden");
 document.getElementById("message").innerText="💰 ECONOMY SAVED!";
+
 setTimeout(newEvent,700);
 }
 }
@@ -447,11 +452,14 @@ happiness+=5;
 clamp();
 updateUI();
 
+if(checkWin())return;
+
 setTimeout(()=>{
 document.getElementById("electionGame").classList.add("hidden");
 document.getElementById("eventPanel").classList.remove("hidden");
 newEvent();
 },1000);
+
 }else{
 endGame("🗳️💀","YOU LOST THE ELECTION!","The potatoes voted you out. Kevin is now president.");
 }
@@ -460,15 +468,19 @@ endGame("🗳️💀","YOU LOST THE ELECTION!","The potatoes voted you out. Kevi
 
 function checkWin(){
 if(happiness>=100&&economy>=100&&safety>=100&&iq>=100){
+
 happiness=economy=safety=iq=100;
+
 clearInterval(countdown);
 clearTimeout(attackTimeout);
 
 document.getElementById("gameScreen").classList.add("hidden");
 document.getElementById("perfectWin").classList.remove("hidden");
 document.getElementById("certificateYear").innerText="President of Potato Nation — Year "+year;
+
 return true;
 }
+
 return false;
 }
 
@@ -494,6 +506,7 @@ document.getElementById("safe").innerText=safety;
 document.getElementById("smart").innerText=iq;
 document.getElementById("lives").innerText=lives;
 document.getElementById("year").innerText=year;
+
 document.getElementById("happyBar").style.width=happiness+"%";
 document.getElementById("moneyBar").style.width=economy+"%";
 document.getElementById("safeBar").style.width=safety+"%";
@@ -504,6 +517,7 @@ function downloadCertificate(){
 let canvas=document.createElement("canvas");
 canvas.width=1200;
 canvas.height=850;
+
 let ctx=canvas.getContext("2d");
 
 ctx.fillStyle="#fff8dc";
@@ -544,6 +558,8 @@ ctx.fillText("YOU ARE THE BEST PRESIDENT!",600,615);
 
 ctx.font="23px Arial";
 ctx.fillText("Potato Nation — Year "+year,600,685);
+
+ctx.font="20px Arial";
 ctx.fillText("Official Potato Government Certificate",600,740);
 
 let link=document.createElement("a");
