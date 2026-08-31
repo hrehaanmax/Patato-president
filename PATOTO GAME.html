@@ -1,0 +1,1296 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🥔 Potato Government</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#2b1a0b,#0c0905);
+  color:#fff;
+  min-height:100vh;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:14px 20px;
+  margin:6px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  background:#e6b83f;
+}
+
+button:hover{transform:scale(1.03)}
+
+.hidden{display:none!important}
+
+#app{
+  width:min(950px,94%);
+  margin:25px auto;
+  background:#17100a;
+  border:2px solid #e6b83f;
+  border-radius:22px;
+  padding:25px;
+  min-height:90vh;
+}
+
+.center{text-align:center}
+
+.potato{
+  font-size:100px;
+  animation:bob 2s infinite;
+}
+
+@keyframes bob{
+  50%{transform:translateY(-10px) rotate(3deg)}
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+
+.stat{
+  background:#25190d;
+  border:1px solid #62491d;
+  padding:12px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:27px;
+  margin-top:5px;
+}
+
+.bar{
+  height:7px;
+  background:#080604;
+  border-radius:20px;
+  margin-top:8px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  width:70%;
+  background:#e6b83f;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.badge{
+  background:#25190d;
+  padding:10px 14px;
+  border-radius:10px;
+}
+
+.panel{
+  background:#21160c;
+  border:2px solid #705522;
+  border-radius:18px;
+  padding:25px;
+  text-align:center;
+  margin-top:15px;
+}
+
+.choice{
+  width:100%;
+  display:block;
+}
+
+.warBtn{
+  width:100%;
+  background:#c8443d;
+  color:white;
+}
+
+#warning{
+  padding:18px;
+  border-radius:15px;
+  margin:20px auto;
+  max-width:650px;
+  background:#8b2222;
+  font-size:26px;
+  font-weight:bold;
+}
+
+#enemyPotato{
+  font-size:90px;
+}
+
+#destroyedScreen{
+  min-height:80vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.roast{
+  max-width:650px;
+  background:#30130f;
+  border:2px solid #d94b45;
+  border-radius:18px;
+  padding:20px;
+  margin:20px;
+  font-size:21px;
+}
+
+.danger{color:#ff7770}
+
+@media(max-width:700px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- ================= START ================= -->
+
+<section id="startScreen" class="center">
+
+  <div class="potato">🥔</div>
+
+  <h1>🥔 POTATO GOVERNMENT 🥔</h1>
+
+  <h2>Do you even have the brain power to do it?</h2>
+
+  <p>
+    Become the leader of Potato Nation.
+    <br>
+    Keep the economy alive, keep the citizens happy,
+    survive elections and win wars.
+  </p>
+
+  <button onclick="startGame()">
+    🥔 BECOME PRESIDENT
+  </button>
+
+  <p style="opacity:.5">Made by Hrehaan</p>
+
+</section>
+
+
+<!-- ================= GAME ================= -->
+
+<section id="gameScreen" class="hidden">
+
+  <div class="top">
+
+    <div class="badge">
+      📅 Year <span id="year">1</span>
+    </div>
+
+    <div class="badge">
+      🗳️ Election every 4 years
+    </div>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+      😊 Happiness
+      <strong id="happy">70</strong>
+      <div class="bar">
+        <div id="happyBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      💰 Economy
+      <strong id="money">70</strong>
+      <div class="bar">
+        <div id="moneyBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      🛡️ Safety
+      <strong id="safe">70</strong>
+      <div class="bar">
+        <div id="safeBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      🧠 Potato IQ
+      <strong id="smart">20</strong>
+      <div class="bar">
+        <div id="smartBar" class="fill"></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <button class="warBtn" onclick="declareWar()">
+    ⚔️ DECLARE WAR
+  </button>
+
+
+  <!-- EVENT -->
+
+  <div id="eventPanel" class="panel">
+
+    <div style="font-size:80px">🥔</div>
+
+    <h2 id="eventTitle">Loading...</h2>
+
+    <p id="eventText"></p>
+
+    <div id="choices"></div>
+
+    <p id="message"></p>
+
+  </div>
+
+
+  <!-- MONEY GAME -->
+
+  <div id="moneyGame" class="panel hidden">
+
+    <h2>💰 THE ECONOMY IS BROKE!</h2>
+
+    <p>
+      The treasury has reached zero.
+      Earn 20 coins to rescue Potato Nation.
+    </p>
+
+    <div style="font-size:80px">🪙</div>
+
+    <h2>
+      Coins:
+      <span id="cash">0</span>/20
+    </h2>
+
+    <button onclick="earnMoney()">💰 WORK</button>
+
+  </div>
+
+
+  <!-- WAR GAME -->
+
+  <div id="warGame" class="panel hidden">
+
+    <div style="font-size:65px">⚔️🥔⚔️</div>
+
+    <h2 id="warTitle">WAR!</h2>
+
+    <p id="battleText">Get ready...</p>
+
+    <h2>
+      Enemy Health:
+      <span id="enemyHealth">100</span>%
+    </h2>
+
+    <div id="enemyPotato">🥔</div>
+
+    <div id="warning">WAIT...</div>
+
+    <h2>
+      ⏱️ <span id="timer">5</span>
+    </h2>
+
+    <p>
+      Watch the screen carefully.
+      <br>
+      Press the exact key shown!
+    </p>
+
+  </div>
+
+
+  <!-- ELECTION -->
+
+  <div id="electionGame" class="panel hidden">
+
+    <h2>🗳️ ELECTION DAY!</h2>
+
+    <p>The potatoes are voting...</p>
+
+    <h2 id="electionResult">Counting votes...</h2>
+
+  </div>
+
+</section>
+
+
+<!-- ================= NORMAL END ================= -->
+
+<section id="endingScreen" class="hidden center">
+
+  <div id="endEmoji" style="font-size:100px"></div>
+
+  <h1 id="endTitle"></h1>
+
+  <p id="endText"></p>
+
+  <button onclick="location.reload()">
+    🔄 TRY AGAIN
+  </button>
+
+</section>
+
+
+<!-- ================= DESTROYED ================= -->
+
+<section id="destroyedScreen" class="hidden">
+
+  <div style="font-size:130px">💀🥔</div>
+
+  <h1 class="danger">
+    POTATO NATION DESTROYED!
+  </h1>
+
+  <h2>💥 YOUR GOVERNMENT HAS FALLEN 💥</h2>
+
+  <p style="font-size:20px">
+    You failed to attack the enemy in time.
+    <br>
+    Potato Nation has been conquered.
+  </p>
+
+  <div class="roast">
+
+    <h2>🔥 ROAST OF THE DAY 🔥</h2>
+
+    <p>
+      Bro had <b>5 whole seconds</b> to press one
+      button and still managed to get the entire
+      country destroyed. 💀
+      <br><br>
+      Even a potato could've done better. 🥔😭
+    </p>
+
+  </div>
+
+  <button onclick="location.reload()">
+    🔄 TRY AGAIN
+  </button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+let happiness=70;
+let economy=70;
+let safety=70;
+let iq=20;
+
+let year=1;
+let rounds=0;
+
+let cash=0;
+
+let currentWar=null;
+let enemyHealth=100;
+
+let attackAllowed=false;
+let requiredKey=null;
+
+let attackTimeout=null;
+let countdown=null;
+
+let timeLeft=5;
+
+let usedEvents=[];
+let usedCountries=[];
+
+
+/* =====================================================
+   NORMAL EVENTS
+===================================================== */
+
+const events=[
+
+ {
+  title:"🐔 CHICKENS DEMAND VOTES!",
+  text:"The chickens want voting rights.",
+  choices:[
+   ["🗳️ Let them vote",10,5,5,5],
+   ["🚫 Say no",-10,0,-5,2],
+   ["🐔 Make a chicken president",15,10,-10,8]
+  ]
+ },
+
+ {
+  title:"🌧️ MASHED POTATO RAIN!",
+  text:"Mashed potatoes are falling from the sky.",
+  choices:[
+   ["🍴 Eat it",15,0,-5,0],
+   ["☂️ Make umbrellas",5,-10,5,5],
+   ["🚨 Declare emergency",-5,-5,15,2]
+  ]
+ },
+
+ {
+  title:"🧠 SMART POTATOES!",
+  text:"Potatoes are becoming smarter than the government.",
+  choices:[
+   ["🧪 Continue experiment",5,-10,5,20],
+   ["🚫 Stop experiment",5,10,10,-10],
+   ["👑 Hire them",15,15,10,15]
+  ]
+ },
+
+ {
+  title:"💸 TREASURY PROBLEM!",
+  text:"Someone ate the national treasury.",
+  choices:[
+   ["🔎 Investigate", -5,10,10,10],
+   ["🥔 Ask Kevin for money",5,20,-5,0],
+   ["🤷 Ignore it",10,-25,-10,-5]
+  ]
+ },
+
+ {
+  title:"🦆 ANGRY DUCKS!",
+  text:"The ducks claim potatoes stole their ponds.",
+  choices:[
+   ["🦆 Give them ponds",10,-10,10,2],
+   ["🥔 Steal more ponds",-10,10,-15,0],
+   ["🤝 Share everything",15,-5,5,5]
+  ]
+ },
+
+ {
+  title:"🚀 POTATO ON THE MOON!",
+  text:"Bob accidentally reached the moon.",
+  choices:[
+   ["🚀 Send more potatoes",15,-20,5,10],
+   ["📸 Sell the photo",5,20,0,2],
+   ["😐 Ignore Bob",-10,5,0,-5]
+  ]
+ },
+
+ {
+  title:"🍕 PIZZA TAX!",
+  text:"The government wants one slice of pizza from every potato.",
+  choices:[
+   ["🍕 Approve it",10,15,0,2],
+   ["🚫 Cancel it",-10,-10,5,3],
+   ["🥔 Replace pizza with potatoes",5,5,-5,5]
+  ]
+ },
+
+ {
+  title:"🎪 POTATO CIRCUS!",
+  text:"A potato circus wants government funding.",
+  choices:[
+   ["🎪 Fund it",15,-15,0,3],
+   ["🚫 Refuse",-10,10,5,0],
+   ["🎟️ Sell tickets",5,20,0,5]
+  ]
+ }
+
+];
+
+
+/* =====================================================
+   COUNTRIES
+===================================================== */
+
+const countries=[
+ ["🧀","Cheese"],
+ ["🦆","Duck"],
+ ["🐔","Chicken"],
+ ["🥕","Carrot"],
+ ["🍅","Tomato"],
+ ["🥦","Broccoli"],
+ ["🍞","Bread"],
+ ["🍉","Watermelon"],
+ ["🌽","Corn"]
+];
+
+
+/* =====================================================
+   START GAME
+===================================================== */
+
+function startGame(){
+
+ document.getElementById("startScreen")
+   .classList.add("hidden");
+
+ document.getElementById("gameScreen")
+   .classList.remove("hidden");
+
+ newEvent();
+ updateUI();
+}
+
+
+/* =====================================================
+   RANDOM EVENT
+===================================================== */
+
+function newEvent(){
+
+ if(happiness<=0){
+   endGame(
+    "🚫🥔",
+    "YOU ARE BOYCOTTED!",
+    "Happiness reached zero. The citizens have boycotted your government."
+   );
+   return;
+ }
+
+ if(economy<=0){
+   startMoneyGame();
+   return;
+ }
+
+
+ if(usedEvents.length===events.length)
+   usedEvents=[];
+
+
+ let available=events.filter(
+   (_,i)=>!usedEvents.includes(i)
+ );
+
+
+ let index=
+   Math.floor(Math.random()*available.length);
+
+ let event=available[index];
+
+ let originalIndex=events.indexOf(event);
+
+ usedEvents.push(originalIndex);
+
+ rounds++;
+
+
+ showEvent(event);
+
+}
+
+
+/* =====================================================
+   SHOW EVENT
+===================================================== */
+
+function showEvent(event){
+
+ document.getElementById("eventPanel")
+   .classList.remove("hidden");
+
+ document.getElementById("eventTitle")
+   .innerText=event.title;
+
+ document.getElementById("eventText")
+   .innerText=event.text;
+
+ document.getElementById("message")
+   .innerText="";
+
+
+ const box=
+   document.getElementById("choices");
+
+ box.innerHTML="";
+
+
+ /*
+    RANDOMIZE THE ACTUAL ANSWERS.
+    The choices themselves are shuffled.
+ */
+
+ let choices=[...event.choices];
+
+ choices.sort(
+   ()=>Math.random()-0.5
+ );
+
+
+ choices.forEach(choice=>{
+
+   let button=
+     document.createElement("button");
+
+   button.className="choice";
+
+   button.innerText=choice[0];
+
+   button.onclick=
+     ()=>makeChoice(choice);
+
+   box.appendChild(button);
+
+ });
+
+}
+
+
+/* =====================================================
+   CHOICE
+===================================================== */
+
+function makeChoice(choice){
+
+ happiness+=choice[1];
+ economy+=choice[2];
+ safety+=choice[3];
+ iq+=choice[4];
+
+
+ clampStats();
+ updateUI();
+
+
+ document.querySelectorAll(".choice")
+   .forEach(b=>b.disabled=true);
+
+
+ /*
+    Every 3 rounds = 1 year.
+ */
+
+ if(rounds%3===0){
+
+   year++;
+
+   updateUI();
+
+
+   if(year%4===0){
+
+     setTimeout(
+       startElection,
+       700
+     );
+
+     return;
+   }
+
+ }
+
+
+ setTimeout(
+   newEvent,
+   700
+ );
+
+}
+
+
+/* =====================================================
+   DECLARE WAR
+===================================================== */
+
+function declareWar(){
+
+ if(currentWar || attackAllowed)return;
+
+
+ let available=
+   countries.filter(
+     c=>!usedCountries.includes(c[1])
+   );
+
+
+ if(available.length===0){
+
+   usedCountries=[];
+
+   available=[...countries];
+
+ }
+
+
+ let country=
+   available[
+     Math.floor(
+       Math.random()*available.length
+     )
+   ];
+
+
+ usedCountries.push(country[1]);
+
+
+ currentWar={
+   emoji:country[0],
+   country:country[1]
+ };
+
+
+ enemyHealth=100;
+
+
+ document.getElementById("eventPanel")
+   .classList.add("hidden");
+
+ document.getElementById("warGame")
+   .classList.remove("hidden");
+
+
+ document.getElementById("warTitle")
+   .innerText=
+   "⚔️ WAR WITH "+
+   country[0]+" "+
+   country[1]+" NATION!";
+
+
+ document.getElementById("enemyHealth")
+   .innerText=100;
+
+
+ startAttackWait();
+
+}
+
+
+/* =====================================================
+   WAIT BEFORE RANDOM KEY
+===================================================== */
+
+function startAttackWait(){
+
+ attackAllowed=false;
+
+ clearTimeout(attackTimeout);
+ clearInterval(countdown);
+
+ document.getElementById("warning")
+   .innerText="WAIT...";
+
+ document.getElementById("warning")
+   .style.background="#8b2222";
+
+ document.getElementById("battleText")
+   .innerText=
+   "The enemy is preparing...";
+
+
+ /*
+    Random delay makes the prompt unpredictable.
+ */
+
+ let delay=
+   1000+
+   Math.random()*2500;
+
+
+ attackTimeout=
+   setTimeout(
+     showAttackPrompt,
+     delay
+   );
+
+}
+
+
+/* =====================================================
+   RANDOM KEY PROMPT
+===================================================== */
+
+const attackKeys=[
+
+ {key:"w",name:"W"},
+ {key:"a",name:"A"},
+ {key:"s",name:"S"},
+ {key:"d",name:"D"},
+ {key:" ",name:"SPACEBAR"},
+ {key:"ArrowUp",name:"↑ UP ARROW"},
+ {key:"ArrowDown",name:"↓ DOWN ARROW"},
+ {key:"ArrowLeft",name:"← LEFT ARROW"},
+ {key:"ArrowRight",name:"→ RIGHT ARROW"},
+ {key:"Shift",name:"SHIFT"},
+ {key:"Enter",name:"ENTER"},
+ {key:"q",name:"Q"},
+ {key:"e",name:"E"}
+
+];
+
+
+function showAttackPrompt(){
+
+ attackAllowed=true;
+
+ timeLeft=5;
+
+
+ let selected=
+   attackKeys[
+     Math.floor(
+       Math.random()*attackKeys.length
+     )
+   ];
+
+
+ requiredKey=selected.key;
+
+
+ document.getElementById("warning")
+   .innerText=
+   "⚡ PRESS "+
+   selected.name+"!";
+
+
+ document.getElementById("warning")
+   .style.background="#d19c25";
+
+
+ document.getElementById("battleText")
+   .innerText=
+   "ATTACK NOW!";
+
+
+ document.getElementById("timer")
+   .innerText=5;
+
+
+ countdown=
+   setInterval(()=>{
+
+     timeLeft--;
+
+     document.getElementById("timer")
+       .innerText=timeLeft;
+
+
+     if(timeLeft<=0){
+
+       clearInterval(countdown);
+
+       attackAllowed=false;
+
+       nationDestroyed();
+
+     }
+
+   },1000);
+
+}
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+document.addEventListener(
+ "keydown",
+ function(event){
+
+   if(!attackAllowed)
+     return;
+
+
+   /*
+      Stop space/arrow keys from scrolling.
+   */
+
+   if(
+     event.key===" " ||
+     event.key.startsWith("Arrow")
+   ){
+     event.preventDefault();
+   }
+
+
+   let pressed=event.key;
+
+   let required=requiredKey;
+
+
+   /*
+      Letters are case-insensitive.
+   */
+
+   if(pressed.length===1)
+     pressed=pressed.toLowerCase();
+
+   if(required.length===1)
+     required=required.toLowerCase();
+
+
+   /*
+      WRONG KEY = INSTANT DEFEAT
+   */
+
+   if(pressed!==required){
+
+     clearInterval(countdown);
+     clearTimeout(attackTimeout);
+
+     attackAllowed=false;
+
+     nationDestroyed();
+
+     return;
+   }
+
+
+   /*
+      CORRECT KEY
+   */
+
+   clearInterval(countdown);
+   clearTimeout(attackTimeout);
+
+   attackAllowed=false;
+
+   successfulAttack();
+
+ });
+
+
+/* =====================================================
+   SUCCESSFUL ATTACK
+===================================================== */
+
+function successfulAttack(){
+
+ enemyHealth-=25;
+
+ if(enemyHealth<0)
+   enemyHealth=0;
+
+
+ document.getElementById("enemyHealth")
+   .innerText=enemyHealth;
+
+
+ document.getElementById("warning")
+   .innerText="💥 HIT!";
+
+
+ document.getElementById("warning")
+   .style.background="#3b8f45";
+
+
+ document.getElementById("battleText")
+   .innerText=
+   "🔥 PERFECT! YOU HIT "+
+   currentWar.country+"!";
+
+
+ if(enemyHealth<=0){
+
+   winWar();
+
+   return;
+ }
+
+
+ /*
+    The next attack gets a new random key.
+ */
+
+ setTimeout(
+   startAttackWait,
+   800
+ );
+
+}
+
+
+/* =====================================================
+   WIN WAR
+===================================================== */
+
+function winWar(){
+
+ clearInterval(countdown);
+ clearTimeout(attackTimeout);
+
+ attackAllowed=false;
+
+
+ happiness+=10;
+ safety+=15;
+
+
+ clampStats();
+ updateUI();
+
+
+ document.getElementById("battleText")
+   .innerText=
+   "🏆 YOU WON THE WAR!";
+
+
+ document.getElementById("warning")
+   .innerText="🎉 VICTORY!";
+
+
+ setTimeout(()=>{
+
+   document.getElementById("warGame")
+     .classList.add("hidden");
+
+   document.getElementById("eventPanel")
+     .classList.remove("hidden");
+
+   currentWar=null;
+
+   newEvent();
+
+ },1200);
+
+}
+
+
+/* =====================================================
+   DESTROYED
+===================================================== */
+
+function nationDestroyed(){
+
+ clearInterval(countdown);
+ clearTimeout(attackTimeout);
+
+ attackAllowed=false;
+ currentWar=null;
+
+
+ document.getElementById("gameScreen")
+   .classList.add("hidden");
+
+ document.getElementById("destroyedScreen")
+   .classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+   MONEY MINIGAME
+===================================================== */
+
+function startMoneyGame(){
+
+ document.getElementById("eventPanel")
+   .classList.add("hidden");
+
+ document.getElementById("moneyGame")
+   .classList.remove("hidden");
+
+ cash=0;
+
+ document.getElementById("cash")
+   .innerText=0;
+
+}
+
+
+function earnMoney(){
+
+ cash+=5;
+
+ document.getElementById("cash")
+   .innerText=cash;
+
+
+ if(cash>=20){
+
+   economy=30;
+
+   clampStats();
+   updateUI();
+
+
+   document.getElementById("moneyGame")
+     .classList.add("hidden");
+
+   document.getElementById("eventPanel")
+     .classList.remove("hidden");
+
+
+   document.getElementById("message")
+     .innerText=
+     "💰 ECONOMY SAVED!";
+
+
+   setTimeout(
+     newEvent,
+     800
+   );
+
+ }
+
+}
+
+
+/* =====================================================
+   ELECTIONS
+===================================================== */
+
+function startElection(){
+
+ document.getElementById("eventPanel")
+   .classList.add("hidden");
+
+ document.getElementById("electionGame")
+   .classList.remove("hidden");
+
+
+ document.getElementById("electionResult")
+   .innerText=
+   "🥔 Counting votes...";
+
+
+ setTimeout(()=>{
+
+   let score=
+     happiness*0.5+
+     economy*0.25+
+     safety*0.25;
+
+
+   if(score>=55){
+
+     document.getElementById("electionResult")
+       .innerText=
+       "🎉 YOU WON THE ELECTION!";
+
+
+     happiness+=5;
+
+     clampStats();
+     updateUI();
+
+
+     setTimeout(()=>{
+
+       document.getElementById("electionGame")
+         .classList.add("hidden");
+
+       document.getElementById("eventPanel")
+         .classList.remove("hidden");
+
+       newEvent();
+
+     },1000);
+
+
+   }else{
+
+     endGame(
+       "🗳️💀",
+       "YOU LOST THE ELECTION!",
+       "The potatoes voted you out. Kevin is now president."
+     );
+
+   }
+
+ },1200);
+
+}
+
+
+/* =====================================================
+   END GAME
+===================================================== */
+
+function endGame(emoji,title,text){
+
+ document.getElementById("gameScreen")
+   .classList.add("hidden");
+
+ document.getElementById("endingScreen")
+   .classList.remove("hidden");
+
+ document.getElementById("endEmoji")
+   .innerText=emoji;
+
+ document.getElementById("endTitle")
+   .innerText=title;
+
+ document.getElementById("endText")
+   .innerText=text;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+function clampStats(){
+
+ happiness=Math.max(0,Math.min(100,happiness));
+ economy=Math.max(0,Math.min(100,economy));
+ safety=Math.max(0,Math.min(100,safety));
+ iq=Math.max(0,Math.min(100,iq));
+
+}
+
+
+function updateUI(){
+
+ document.getElementById("happy")
+   .innerText=happiness;
+
+ document.getElementById("money")
+   .innerText=economy;
+
+ document.getElementById("safe")
+   .innerText=safety;
+
+ document.getElementById("smart")
+   .innerText=iq;
+
+
+ document.getElementById("happyBar")
+   .style.width=happiness+"%";
+
+ document.getElementById("moneyBar")
+   .style.width=economy+"%";
+
+ document.getElementById("safeBar")
+   .style.width=safety+"%";
+
+ document.getElementById("smartBar")
+   .style.width=iq+"%";
+
+
+ document.getElementById("year")
+   .innerText=year;
+
+}
+
+
+/* =====================================================
+   START VALUES
+===================================================== */
+
+updateUI();
+
+</script>
+
+</body>
+</html>
+```
