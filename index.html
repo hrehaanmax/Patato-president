@@ -13,6 +13,7 @@ body{
     font-family:Arial,sans-serif;
     background:linear-gradient(135deg,#2b1808,#090604);
     color:white;
+    overflow-x:hidden;
 }
 
 button{
@@ -25,9 +26,10 @@ button{
     cursor:pointer;
     background:#e6b83f;
     color:#17100a;
+    transition:.15s;
 }
 
-button:hover{transform:scale(1.04)}
+button:hover{transform:scale(1.06)}
 
 .hidden{display:none!important}
 
@@ -109,6 +111,7 @@ button:hover{transform:scale(1.04)}
 .fill{
     height:100%;
     background:#e6b83f;
+    transition:.4s;
 }
 
 .panel{
@@ -196,10 +199,153 @@ button:hover{transform:scale(1.04)}
     font-weight:bold;
 }
 
+
+/* =========================================
+   WAR ANIMATION
+========================================= */
+
+#warAnimation{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.96);
+    z-index:5000;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+#battlefield{
+    position:relative;
+    width:min(900px,94%);
+    height:350px;
+    border:5px solid white;
+    border-radius:25px;
+    background:
+        linear-gradient(#171717 0 65%,#302010 65%);
+    overflow:hidden;
+}
+
+.fighter{
+    position:absolute;
+    font-size:80px;
+    top:145px;
+    transition:transform .5s;
+}
+
+#playerFighter{
+    left:8%;
+}
+
+#enemyFighter{
+    right:8%;
+}
+
+.battleMovePlayer{
+    animation:playerAttack .7s ease-in-out;
+}
+
+.battleMoveEnemy{
+    animation:enemyAttack .7s ease-in-out;
+}
+
+@keyframes playerAttack{
+    50%{transform:translateX(250px) rotate(15deg)}
+}
+
+@keyframes enemyAttack{
+    50%{transform:translateX(-250px) rotate(-15deg)}
+}
+
+.explosion{
+    position:absolute;
+    font-size:70px;
+    animation:explode .8s forwards;
+    pointer-events:none;
+}
+
+@keyframes explode{
+    0%{
+        opacity:1;
+        transform:scale(.2);
+    }
+    50%{
+        opacity:1;
+        transform:scale(1.6) rotate(20deg);
+    }
+    100%{
+        opacity:0;
+        transform:scale(2.5) rotate(60deg);
+    }
+}
+
+#battleResult{
+    font-size:clamp(40px,8vw,85px);
+    font-weight:1000;
+    text-shadow:7px 7px #000;
+    margin:20px;
+    animation:battleText .6s infinite alternate;
+}
+
+@keyframes battleText{
+    from{transform:scale(1) rotate(-2deg)}
+    to{transform:scale(1.08) rotate(2deg)}
+}
+
+.victoryText{
+    color:#ffe600;
+}
+
+.defeatText{
+    color:#ff4444;
+}
+
+.confetti{
+    position:absolute;
+    top:-30px;
+    font-size:30px;
+    animation:confettiFall 2.5s linear forwards;
+}
+
+@keyframes confettiFall{
+    to{
+        transform:translateY(500px) rotate(720deg);
+        opacity:0;
+    }
+}
+
+.shakeScreen{
+    animation:screenShake .12s infinite;
+}
+
+@keyframes screenShake{
+    0%{transform:translate(0)}
+    25%{transform:translate(10px,-6px)}
+    50%{transform:translate(-10px,7px)}
+    75%{transform:translate(6px,8px)}
+    100%{transform:translate(0)}
+}
+
+.defeatFlash{
+    position:absolute;
+    inset:0;
+    background:#f00;
+    opacity:0;
+    animation:flashRed .5s;
+}
+
+@keyframes flashRed{
+    0%{opacity:.8}
+    100%{opacity:0}
+}
+
 @media(max-width:700px){
     #app{padding:14px}
     .stats{grid-template-columns:repeat(2,1fr)}
     .phoneKeys{grid-template-columns:repeat(2,1fr)}
+    .fighter{font-size:60px}
+    #battlefield{height:280px}
 }
 </style>
 </head>
@@ -526,6 +672,31 @@ Even a potato could've done better. 🥔😭
 </div>
 
 
+<!-- =========================================
+     WAR ANIMATION SCREEN
+========================================= -->
+
+<div id="warAnimation" class="hidden">
+
+<h1 id="battleResult"></h1>
+
+<div id="battlefield">
+
+<div id="playerFighter" class="fighter">
+🥔🛡️
+</div>
+
+<div id="enemyFighter" class="fighter">
+👹⚔️
+</div>
+
+</div>
+
+<p id="animationMessage" style="font-size:24px;font-weight:bold"></p>
+
+</div>
+
+
 <script>
 
 let device="";
@@ -554,9 +725,11 @@ let timeLeft=3;
 let usedEvents=[];
 let usedCountries=[];
 
+let currentEnemyEmoji="👹";
+
 
 /* =========================
-   HARDER EVENTS
+   EVENTS
 ========================= */
 
 const events=[
@@ -925,6 +1098,8 @@ Math.floor(Math.random()*available.length)
 
 usedCountries.push(country[1]);
 
+currentEnemyEmoji=country[0];
+
 enemyHealth=100;
 
 document.getElementById("eventPanel")
@@ -951,7 +1126,7 @@ startAttackWait();
 
 
 /* =========================
-   WAR TIMER
+   WAR WAIT
 ========================= */
 
 function startAttackWait(){
@@ -981,7 +1156,7 @@ showAttackPrompt,
 
 
 /* =========================
-   HARD ATTACK
+   ATTACK PROMPT
 ========================= */
 
 function showAttackPrompt(){
@@ -1035,7 +1210,7 @@ loseLife();
 
 
 /* =========================
-   LAPTOP KEYBOARD
+   KEYBOARD
 ========================= */
 
 document.addEventListener(
@@ -1123,7 +1298,7 @@ updateUI();
 
 if(lives<=0){
 
-nationDestroyed();
+showWarDefeatAnimation();
 
 return;
 
@@ -1166,7 +1341,7 @@ document.getElementById("warning")
 
 if(enemyHealth<=0){
 
-winWar();
+showWarVictoryAnimation();
 
 return;
 
@@ -1180,22 +1355,95 @@ startAttackWait,
 }
 
 
-/* =========================
-   WAR WIN
-========================= */
+/* =========================================
+   WAR VICTORY ANIMATION
+========================================= */
 
-function winWar(){
+function showWarVictoryAnimation(){
 
 clearInterval(countdown);
 clearTimeout(attackTimeout);
 
-document.getElementById("battleText")
-.innerText=
-"🏆 YOU WON THE WAR!";
+attackAllowed=false;
 
-document.getElementById("warning")
+let screen=
+document.getElementById("warAnimation");
+
+let player=
+document.getElementById("playerFighter");
+
+let enemy=
+document.getElementById("enemyFighter");
+
+screen.classList.remove("hidden");
+
+document.getElementById("battleResult")
+.innerText="";
+
+document.getElementById("animationMessage")
 .innerText=
-"🎉 VICTORY!";
+"🥔 POTATO NATION ATTACKS!";
+
+player.className="fighter";
+enemy.className="fighter";
+
+player.style.left="8%";
+enemy.style.right="8%";
+
+setTimeout(()=>{
+
+player.classList.add("battleMovePlayer");
+
+},300);
+
+setTimeout(()=>{
+
+createExplosion(50,50,"💥");
+
+document.getElementById("animationMessage")
+.innerText=
+"💥 DIRECT HIT!";
+
+enemy.classList.add("battleMoveEnemy");
+
+},900);
+
+setTimeout(()=>{
+
+enemy.innerText="💫";
+
+document.getElementById("animationMessage")
+.innerText=
+"😭 THE ENEMY IS RETREATING!";
+
+},1500);
+
+setTimeout(()=>{
+
+document.getElementById("battleResult")
+.innerText=
+"🏆 VICTORY!";
+
+document.getElementById("battleResult")
+.className="victoryText";
+
+document.getElementById("animationMessage")
+.innerText=
+"🥔 POTATO NATION WINS THE WAR!";
+
+createConfetti();
+
+},2100);
+
+setTimeout(()=>{
+
+screen.classList.add("hidden");
+
+document.getElementById("warGame")
+.classList.add("hidden");
+
+document.getElementById("eventPanel")
+.classList.remove("hidden");
 
 happiness+=8;
 safety+=12;
@@ -1204,31 +1452,106 @@ clamp();
 
 updateUI();
 
-if(checkWin())return;
-
-setTimeout(()=>{
-
-document.getElementById("warGame")
-.classList.add("hidden");
-
-document.getElementById("eventPanel")
-.classList.remove("hidden");
-
+if(!checkWin())
 newEvent();
 
-},1000);
+},4200);
 
 }
 
 
-/* =========================
-   DESTROYED
-========================= */
+/* =========================================
+   WAR DEFEAT ANIMATION
+========================================= */
 
-function nationDestroyed(){
+function showWarDefeatAnimation(){
 
 clearInterval(countdown);
 clearTimeout(attackTimeout);
+
+attackAllowed=false;
+
+let screen=
+document.getElementById("warAnimation");
+
+let player=
+document.getElementById("playerFighter");
+
+let enemy=
+document.getElementById("enemyFighter");
+
+screen.classList.remove("hidden");
+
+document.getElementById("battleResult")
+.innerText="";
+
+document.getElementById("animationMessage")
+.innerText=
+"😈 THE ENEMY COUNTERATTACKS!";
+
+player.className="fighter";
+enemy.className="fighter";
+
+player.style.left="8%";
+enemy.style.right="8%";
+
+setTimeout(()=>{
+
+enemy.classList.add("battleMoveEnemy");
+
+},300);
+
+setTimeout(()=>{
+
+createExplosion(50,50,"💥");
+
+document.getElementById("animationMessage")
+.innerText=
+"💥 BOOM!";
+
+player.classList.add("battleMovePlayer");
+
+},900);
+
+setTimeout(()=>{
+
+player.innerText="💀";
+
+document.getElementById("animationMessage")
+.innerText=
+"😭 POTATO NATION IS LOSING!";
+
+document.body.classList.add("shakeScreen");
+
+},1500);
+
+setTimeout(()=>{
+
+document.body.classList.remove("shakeScreen");
+
+let flash=
+document.createElement("div");
+
+flash.className="defeatFlash";
+
+screen.appendChild(flash);
+
+document.getElementById("battleResult")
+.innerText=
+"💀 DEFEAT!";
+
+document.getElementById("battleResult")
+.className="defeatText";
+
+document.getElementById("animationMessage")
+.innerText=
+"🏳️ THE ENEMY HAS WON!";
+
+},2200);
+
+setTimeout(()=>{
+
+screen.classList.add("hidden");
 
 document.getElementById("gameScreen")
 .classList.add("hidden");
@@ -1236,11 +1559,82 @@ document.getElementById("gameScreen")
 document.getElementById("destroyedScreen")
 .classList.remove("hidden");
 
+},4200);
+
 }
 
 
 /* =========================
-   ECONOMY MINIGAME
+   EXPLOSION
+========================= */
+
+function createExplosion(x,y,emoji){
+
+let e=
+document.createElement("div");
+
+e.className="explosion";
+
+e.innerText=emoji;
+
+e.style.left=x+"%";
+e.style.top=y+"%";
+
+document
+.getElementById("battlefield")
+.appendChild(e);
+
+setTimeout(()=>{
+e.remove();
+},900);
+
+}
+
+
+/* =========================
+   CONFETTI
+========================= */
+
+function createConfetti(){
+
+let battlefield=
+document.getElementById("battlefield");
+
+let emojis=[
+"🎉","🥔","🏆","⭐","🔥","😂"
+];
+
+for(let i=0;i<35;i++){
+
+let c=
+document.createElement("div");
+
+c.className="confetti";
+
+c.innerText=
+emojis[
+Math.floor(Math.random()*emojis.length)
+];
+
+c.style.left=
+Math.random()*100+"%";
+
+c.style.animationDelay=
+Math.random()*.8+"s";
+
+battlefield.appendChild(c);
+
+setTimeout(()=>{
+c.remove();
+},3000);
+
+}
+
+}
+
+
+/* =========================
+   ECONOMY
 ========================= */
 
 function startMoneyGame(){
@@ -1258,10 +1652,6 @@ document.getElementById("cash")
 
 }
 
-
-/* =========================
-   MONEY
-========================= */
 
 function earnMoney(){
 
@@ -1609,11 +1999,6 @@ canvas.toDataURL("image/png");
 link.click();
 
 }
-
-
-/* =========================
-   START UI
-========================= */
 
 updateUI();
 
