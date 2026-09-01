@@ -10,34 +10,48 @@
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#2b1808,#090604);
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 20% 10%,#60350e,transparent 30%),
+        radial-gradient(circle at 80% 90%,#42120e,transparent 35%),
+        #080604;
     color:white;
     overflow-x:hidden;
 }
 
 button{
-    border:0;
-    border-radius:12px;
+    border:4px solid #000;
+    border-radius:14px;
     padding:14px 20px;
     margin:6px;
     font-size:17px;
-    font-weight:bold;
+    font-weight:900;
     cursor:pointer;
     background:#e6b83f;
     color:#17100a;
-    transition:.15s;
+    box-shadow:5px 5px #000;
+    transition:.12s;
 }
 
-button:hover{transform:scale(1.06)}
+button:hover{
+    transform:scale(1.06) rotate(1deg);
+    background:#ffe56b;
+}
 
-.hidden{display:none!important}
+button:active{
+    transform:translate(4px,4px);
+    box-shadow:1px 1px #000;
+}
+
+.hidden{
+    display:none!important;
+}
 
 #app{
     width:min(950px,94%);
     margin:20px auto;
     background:#17100a;
-    border:2px solid #e6b83f;
+    border:3px solid #e6b83f;
     border-radius:22px;
     padding:22px;
     min-height:92vh;
@@ -51,7 +65,9 @@ button:hover{transform:scale(1.06)}
 }
 
 @keyframes bob{
-    50%{transform:translateY(-12px) rotate(5deg)}
+    50%{
+        transform:translateY(-12px) rotate(5deg);
+    }
 }
 
 .deviceButtons{
@@ -77,6 +93,7 @@ button:hover{transform:scale(1.06)}
     background:#281a0d;
     padding:10px 14px;
     border-radius:10px;
+    border:1px solid #705522;
 }
 
 .stats{
@@ -101,7 +118,7 @@ button:hover{transform:scale(1.06)}
 }
 
 .bar{
-    height:7px;
+    height:8px;
     background:#080604;
     border-radius:20px;
     overflow:hidden;
@@ -161,6 +178,217 @@ button:hover{transform:scale(1.06)}
     margin:0;
 }
 
+
+/* ========================================
+   WAR ANIMATION
+======================================== */
+
+#warAnimation{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:
+        radial-gradient(circle,#3b2712,#050505 75%);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+#battlefield{
+    position:relative;
+    width:min(900px,92%);
+    height:360px;
+    border:5px solid white;
+    border-radius:25px;
+    overflow:hidden;
+    background:
+        linear-gradient(
+            to bottom,
+            #111 0%,
+            #222 65%,
+            #49331b 65%,
+            #49331b 100%
+        );
+}
+
+.battleFighter{
+    position:absolute;
+    top:135px;
+    font-size:80px;
+    z-index:5;
+}
+
+#playerFighter{
+    left:6%;
+}
+
+#enemyFighter{
+    right:6%;
+}
+
+
+/* CHARGING */
+
+.playerCharge{
+    animation:playerCharge .7s ease-in-out;
+}
+
+.enemyCharge{
+    animation:enemyCharge .7s ease-in-out;
+}
+
+@keyframes playerCharge{
+    0%{
+        transform:translateX(0) rotate(0);
+    }
+    50%{
+        transform:translateX(300px) rotate(18deg);
+    }
+    100%{
+        transform:translateX(0) rotate(0);
+    }
+}
+
+@keyframes enemyCharge{
+    0%{
+        transform:translateX(0) rotate(0);
+    }
+    50%{
+        transform:translateX(-300px) rotate(-18deg);
+    }
+    100%{
+        transform:translateX(0) rotate(0);
+    }
+}
+
+
+/* EXPLOSION */
+
+.battleExplosion{
+    position:absolute;
+    font-size:90px;
+    z-index:20;
+    pointer-events:none;
+    animation:explode .8s forwards;
+}
+
+@keyframes explode{
+    0%{
+        opacity:1;
+        transform:scale(.1) rotate(0);
+    }
+    50%{
+        opacity:1;
+        transform:scale(1.7) rotate(180deg);
+    }
+    100%{
+        opacity:0;
+        transform:scale(3) rotate(360deg);
+    }
+}
+
+
+/* BATTLE TEXT */
+
+#battleResult{
+    font-size:clamp(45px,9vw,100px);
+    font-weight:1000;
+    margin:10px;
+    text-shadow:7px 7px #000;
+    z-index:30;
+}
+
+.victoryBattle{
+    color:#ffe600;
+    animation:victoryPop .5s infinite alternate;
+}
+
+.defeatBattle{
+    color:#ff3030;
+    animation:defeatPop .2s infinite alternate;
+}
+
+@keyframes victoryPop{
+    from{
+        transform:scale(1) rotate(-2deg);
+    }
+    to{
+        transform:scale(1.1) rotate(2deg);
+    }
+}
+
+@keyframes defeatPop{
+    from{
+        transform:scale(1);
+    }
+    to{
+        transform:scale(1.08);
+    }
+}
+
+#battleMessage{
+    font-size:25px;
+    font-weight:1000;
+    z-index:30;
+}
+
+
+/* SCREEN SHAKE */
+
+.battleShake{
+    animation:battleShake .1s infinite;
+}
+
+@keyframes battleShake{
+    0%{transform:translate(0)}
+    25%{transform:translate(9px,-6px)}
+    50%{transform:translate(-9px,6px)}
+    75%{transform:translate(6px,8px)}
+    100%{transform:translate(0)}
+}
+
+
+/* CONFETTI */
+
+.battleConfetti{
+    position:absolute;
+    top:-40px;
+    font-size:30px;
+    animation:battleFall 2.5s linear forwards;
+    z-index:15;
+}
+
+@keyframes battleFall{
+    to{
+        transform:translateY(450px) rotate(720deg);
+        opacity:0;
+    }
+}
+
+
+/* DEFEAT FLASH */
+
+.defeatFlash{
+    position:absolute;
+    inset:0;
+    background:red;
+    opacity:0;
+    z-index:50;
+    pointer-events:none;
+    animation:redFlash .5s;
+}
+
+@keyframes redFlash{
+    0%{opacity:.8}
+    100%{opacity:0}
+}
+
+
+/* GAME OVER */
+
 #destroyedScreen{
     min-height:80vh;
     display:flex;
@@ -180,7 +408,9 @@ button:hover{transform:scale(1.06)}
     font-size:20px;
 }
 
-.danger{color:#ff7770}
+.danger{
+    color:#ff7770;
+}
 
 .certificate{
     background:#fff8dc;
@@ -192,167 +422,49 @@ button:hover{transform:scale(1.06)}
     max-width:720px;
 }
 
-.certificate h1{color:#7b4d00}
+.certificate h1{
+    color:#7b4d00;
+}
 
 .hard{
     color:#ff6666;
     font-weight:bold;
 }
 
-
-/* =========================================
-   WAR ANIMATION
-========================================= */
-
-#warAnimation{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.96);
-    z-index:5000;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-}
-
-#battlefield{
-    position:relative;
-    width:min(900px,94%);
-    height:350px;
-    border:5px solid white;
-    border-radius:25px;
-    background:
-        linear-gradient(#171717 0 65%,#302010 65%);
-    overflow:hidden;
-}
-
-.fighter{
-    position:absolute;
-    font-size:80px;
-    top:145px;
-    transition:transform .5s;
-}
-
-#playerFighter{
-    left:8%;
-}
-
-#enemyFighter{
-    right:8%;
-}
-
-.battleMovePlayer{
-    animation:playerAttack .7s ease-in-out;
-}
-
-.battleMoveEnemy{
-    animation:enemyAttack .7s ease-in-out;
-}
-
-@keyframes playerAttack{
-    50%{transform:translateX(250px) rotate(15deg)}
-}
-
-@keyframes enemyAttack{
-    50%{transform:translateX(-250px) rotate(-15deg)}
-}
-
-.explosion{
-    position:absolute;
-    font-size:70px;
-    animation:explode .8s forwards;
-    pointer-events:none;
-}
-
-@keyframes explode{
-    0%{
-        opacity:1;
-        transform:scale(.2);
-    }
-    50%{
-        opacity:1;
-        transform:scale(1.6) rotate(20deg);
-    }
-    100%{
-        opacity:0;
-        transform:scale(2.5) rotate(60deg);
-    }
-}
-
-#battleResult{
-    font-size:clamp(40px,8vw,85px);
-    font-weight:1000;
-    text-shadow:7px 7px #000;
-    margin:20px;
-    animation:battleText .6s infinite alternate;
-}
-
-@keyframes battleText{
-    from{transform:scale(1) rotate(-2deg)}
-    to{transform:scale(1.08) rotate(2deg)}
-}
-
-.victoryText{
-    color:#ffe600;
-}
-
-.defeatText{
-    color:#ff4444;
-}
-
-.confetti{
-    position:absolute;
-    top:-30px;
-    font-size:30px;
-    animation:confettiFall 2.5s linear forwards;
-}
-
-@keyframes confettiFall{
-    to{
-        transform:translateY(500px) rotate(720deg);
-        opacity:0;
-    }
-}
-
-.shakeScreen{
-    animation:screenShake .12s infinite;
-}
-
-@keyframes screenShake{
-    0%{transform:translate(0)}
-    25%{transform:translate(10px,-6px)}
-    50%{transform:translate(-10px,7px)}
-    75%{transform:translate(6px,8px)}
-    100%{transform:translate(0)}
-}
-
-.defeatFlash{
-    position:absolute;
-    inset:0;
-    background:#f00;
-    opacity:0;
-    animation:flashRed .5s;
-}
-
-@keyframes flashRed{
-    0%{opacity:.8}
-    100%{opacity:0}
-}
-
 @media(max-width:700px){
-    #app{padding:14px}
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .phoneKeys{grid-template-columns:repeat(2,1fr)}
-    .fighter{font-size:60px}
-    #battlefield{height:280px}
+
+    #app{
+        padding:14px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .phoneKeys{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .battleFighter{
+        font-size:60px;
+    }
+
+    #battlefield{
+        height:280px;
+    }
 }
 </style>
 </head>
 
+
 <body>
 
 <div id="app">
+
+
+<!-- ========================================
+     START
+======================================== -->
 
 <section id="startScreen" class="center">
 
@@ -375,12 +487,23 @@ Keep the country alive while making every potato happy.
 <h2>Choose your device</h2>
 
 <div class="deviceButtons">
-<button onclick="startGame('laptop')">💻 LAPTOP</button>
-<button onclick="startGame('phone')">📱 PHONE</button>
+
+<button onclick="startGame('laptop')">
+💻 LAPTOP
+</button>
+
+<button onclick="startGame('phone')">
+📱 PHONE
+</button>
+
 </div>
 
 </section>
 
+
+<!-- ========================================
+     GAME
+======================================== -->
 
 <section id="gameScreen" class="hidden">
 
@@ -406,33 +529,44 @@ Keep the country alive while making every potato happy.
 <div class="stat">
 😊 Happiness
 <strong id="happy">70</strong>
+
 <div class="bar">
 <div id="happyBar" class="fill"></div>
 </div>
+
 </div>
+
 
 <div class="stat">
 💰 Economy
 <strong id="money">70</strong>
+
 <div class="bar">
 <div id="moneyBar" class="fill"></div>
 </div>
+
 </div>
+
 
 <div class="stat">
 🛡️ Safety
 <strong id="safe">70</strong>
+
 <div class="bar">
 <div id="safeBar" class="fill"></div>
 </div>
+
 </div>
+
 
 <div class="stat">
 🧠 Potato IQ
 <strong id="smart">20</strong>
+
 <div class="bar">
 <div id="smartBar" class="fill"></div>
 </div>
+
 </div>
 
 </div>
@@ -443,9 +577,13 @@ Keep the country alive while making every potato happy.
 </button>
 
 
+<!-- EVENT -->
+
 <div id="eventPanel" class="panel">
 
-<div style="font-size:75px">🥔</div>
+<div style="font-size:75px">
+🥔
+</div>
 
 <h2 id="eventTitle"></h2>
 
@@ -458,17 +596,19 @@ Keep the country alive while making every potato happy.
 </div>
 
 
+<!-- ECONOMY -->
+
 <div id="moneyGame" class="panel hidden">
 
 <h2>💀 THE ECONOMY IS DEAD!</h2>
 
 <p>
 Earn <b>40 coins</b>.
-<br>
-Yes. FORTY.
 </p>
 
-<div style="font-size:75px">🪙</div>
+<div style="font-size:75px">
+🪙
+</div>
 
 <h2>
 Coins:
@@ -482,13 +622,17 @@ Coins:
 </div>
 
 
+<!-- WAR -->
+
 <div id="warGame" class="panel hidden">
 
 <div style="font-size:60px">
 ⚔️🥔⚔️
 </div>
 
-<h2 id="warTitle">WAR!</h2>
+<h2 id="warTitle">
+WAR!
+</h2>
 
 <p id="battleText"></p>
 
@@ -497,7 +641,9 @@ Enemy Health:
 <span id="enemyHealth">100</span>%
 </h2>
 
-<div id="enemyPotato">🥔</div>
+<div id="enemyPotato">
+🥔
+</div>
 
 <div id="warning">
 WAIT...
@@ -536,6 +682,8 @@ WAIT...
 </div>
 
 
+<!-- ELECTION -->
+
 <div id="electionGame" class="panel hidden">
 
 <h2>🗳️ ELECTION DAY!</h2>
@@ -552,6 +700,10 @@ Counting votes...
 
 </section>
 
+
+<!-- ========================================
+     PERFECT WIN
+======================================== -->
 
 <section id="perfectWin" class="hidden center">
 
@@ -615,6 +767,10 @@ has successfully achieved:
 </section>
 
 
+<!-- ========================================
+     NORMAL END
+======================================== -->
+
 <section id="endingScreen" class="hidden center">
 
 <div id="endEmoji" style="font-size:100px"></div>
@@ -630,7 +786,11 @@ has successfully achieved:
 </section>
 
 
-<section id="destroyedScreen" class="hidden">
+<!-- ========================================
+     DESTROYED
+======================================== -->
+
+<section id="destroyedScreen" class="hidden center">
 
 <div style="font-size:120px">
 💀🥔
@@ -672,32 +832,37 @@ Even a potato could've done better. 🥔😭
 </div>
 
 
-<!-- =========================================
-     WAR ANIMATION SCREEN
-========================================= -->
+<!-- ========================================
+     WAR ANIMATION OVERLAY
+======================================== -->
 
 <div id="warAnimation" class="hidden">
 
-<h1 id="battleResult"></h1>
+<h1 id="battleResult">
+</h1>
 
 <div id="battlefield">
 
-<div id="playerFighter" class="fighter">
+<div id="playerFighter" class="battleFighter">
 🥔🛡️
 </div>
 
-<div id="enemyFighter" class="fighter">
+<div id="enemyFighter" class="battleFighter">
 👹⚔️
 </div>
 
 </div>
 
-<p id="animationMessage" style="font-size:24px;font-weight:bold"></p>
+<p id="battleMessage"></p>
 
 </div>
 
 
 <script>
+
+/* ========================================
+   VARIABLES
+======================================== */
 
 let device="";
 
@@ -710,11 +875,11 @@ let year=1;
 let rounds=0;
 
 let cash=0;
-
 let lives=3;
 
 let requiredKey="";
 let attackAllowed=false;
+
 let enemyHealth=100;
 
 let attackTimeout=null;
@@ -728,9 +893,46 @@ let usedCountries=[];
 let currentEnemyEmoji="👹";
 
 
-/* =========================
+/* ========================================
+   COUNTRIES
+======================================== */
+
+const countries=[
+
+["🧀","Cheese"],
+["🦆","Duck"],
+["🐔","Chicken"],
+["🥕","Carrot"],
+["🍅","Tomato"],
+["🥦","Broccoli"],
+["🍞","Bread"],
+["🍉","Watermelon"],
+["🌽","Corn"]
+
+];
+
+
+const keys=[
+
+["w","W"],
+["a","A"],
+["s","S"],
+["d","D"],
+[" ","SPACEBAR"],
+["e","E"],
+["q","Q"],
+["ArrowUp","↑ UP"],
+["ArrowDown","↓ DOWN"],
+["ArrowLeft","← LEFT"],
+["ArrowRight","RIGHT →"],
+["Enter","ENTER"]
+
+];
+
+
+/* ========================================
    EVENTS
-========================= */
+======================================== */
 
 const events=[
 
@@ -857,42 +1059,9 @@ const events=[
 ];
 
 
-const countries=[
-
-["🧀","Cheese"],
-["🦆","Duck"],
-["🐔","Chicken"],
-["🥕","Carrot"],
-["🍅","Tomato"],
-["🥦","Broccoli"],
-["🍞","Bread"],
-["🍉","Watermelon"],
-["🌽","Corn"]
-
-];
-
-
-const keys=[
-
-["w","W"],
-["a","A"],
-["s","S"],
-["d","D"],
-[" ","SPACEBAR"],
-["e","E"],
-["q","Q"],
-["ArrowUp","↑ UP"],
-["ArrowDown","↓ DOWN"],
-["ArrowLeft","← LEFT"],
-["ArrowRight","RIGHT →"],
-["Enter","ENTER"]
-
-];
-
-
-/* =========================
+/* ========================================
    START
-========================= */
+======================================== */
 
 function startGame(d){
 
@@ -923,9 +1092,9 @@ newEvent();
 }
 
 
-/* =========================
-   EVENTS
-========================= */
+/* ========================================
+   NEW EVENT
+======================================== */
 
 function newEvent(){
 
@@ -940,6 +1109,7 @@ endGame(
 );
 
 return;
+
 }
 
 if(economy<=0){
@@ -947,6 +1117,7 @@ if(economy<=0){
 startMoneyGame();
 
 return;
+
 }
 
 if(usedEvents.length===events.length)
@@ -971,9 +1142,9 @@ showEvent(events[i]);
 }
 
 
-/* =========================
+/* ========================================
    SHOW EVENT
-========================= */
+======================================== */
 
 function showEvent(e){
 
@@ -996,11 +1167,7 @@ box.innerHTML="";
 
 let choices=[...e[2]];
 
-for(
-let i=choices.length-1;
-i>0;
-i--
-){
+for(let i=choices.length-1;i>0;i--){
 
 let j=
 Math.floor(Math.random()*(i+1));
@@ -1029,9 +1196,9 @@ box.appendChild(b);
 }
 
 
-/* =========================
+/* ========================================
    CHOICE
-========================= */
+======================================== */
 
 function makeChoice(c){
 
@@ -1041,7 +1208,6 @@ safety+=c[3];
 iq+=c[4];
 
 clamp();
-
 updateUI();
 
 if(checkWin())return;
@@ -1069,19 +1235,13 @@ setTimeout(newEvent,600);
 }
 
 
-/* =========================
-   WAR
-========================= */
+/* ========================================
+   DECLARE WAR
+======================================== */
 
 function declareWar(){
 
-if(
-attackAllowed||
-!document
-.getElementById("warGame")
-.classList.contains("hidden")
-)
-return;
+if(attackAllowed)return;
 
 if(usedCountries.length===countries.length)
 usedCountries=[];
@@ -1125,9 +1285,9 @@ startAttackWait();
 }
 
 
-/* =========================
-   WAR WAIT
-========================= */
+/* ========================================
+   ATTACK WAIT
+======================================== */
 
 function startAttackWait(){
 
@@ -1155,9 +1315,9 @@ showAttackPrompt,
 }
 
 
-/* =========================
+/* ========================================
    ATTACK PROMPT
-========================= */
+======================================== */
 
 function showAttackPrompt(){
 
@@ -1209,13 +1369,11 @@ loseLife();
 }
 
 
-/* =========================
-   KEYBOARD
-========================= */
+/* ========================================
+   LAPTOP
+======================================== */
 
-document.addEventListener(
-"keydown",
-e=>{
+document.addEventListener("keydown",e=>{
 
 if(device!=="laptop"||!attackAllowed)
 return;
@@ -1228,13 +1386,12 @@ e.preventDefault();
 
 checkAttack(e.key);
 
-}
-);
+});
 
 
-/* =========================
+/* ========================================
    PHONE
-========================= */
+======================================== */
 
 function phoneKey(k){
 
@@ -1247,9 +1404,9 @@ checkAttack(k);
 }
 
 
-/* =========================
+/* ========================================
    CHECK ATTACK
-========================= */
+======================================== */
 
 function checkAttack(k){
 
@@ -1286,42 +1443,9 @@ successfulAttack();
 }
 
 
-/* =========================
-   MISS
-========================= */
-
-function loseLife(){
-
-lives--;
-
-updateUI();
-
-if(lives<=0){
-
-showWarDefeatAnimation();
-
-return;
-
-}
-
-document.getElementById("warning")
-.innerText=
-"❌ WRONG! ONE LIFE LOST!";
-
-document.getElementById("warning")
-.style.background="#8b2222";
-
-setTimeout(
-startAttackWait,
-700
-);
-
-}
-
-
-/* =========================
-   SUCCESSFUL ATTACK
-========================= */
+/* ========================================
+   SUCCESS
+======================================== */
 
 function successfulAttack(){
 
@@ -1347,17 +1471,44 @@ return;
 
 }
 
-setTimeout(
-startAttackWait,
-600
-);
+setTimeout(startAttackWait,600);
 
 }
 
 
-/* =========================================
-   WAR VICTORY ANIMATION
-========================================= */
+/* ========================================
+   MISS
+======================================== */
+
+function loseLife(){
+
+lives--;
+
+updateUI();
+
+if(lives<=0){
+
+showWarDefeatAnimation();
+
+return;
+
+}
+
+document.getElementById("warning")
+.innerText=
+"❌ WRONG! ONE LIFE LOST!";
+
+document.getElementById("warning")
+.style.background="#8b2222";
+
+setTimeout(startAttackWait,700);
+
+}
+
+
+/* ========================================
+   🏆 WAR VICTORY ANIMATION
+======================================== */
 
 function showWarVictoryAnimation(){
 
@@ -1369,6 +1520,9 @@ attackAllowed=false;
 let screen=
 document.getElementById("warAnimation");
 
+let field=
+document.getElementById("battlefield");
+
 let player=
 document.getElementById("playerFighter");
 
@@ -1377,46 +1531,81 @@ document.getElementById("enemyFighter");
 
 screen.classList.remove("hidden");
 
+player.className="battleFighter";
+enemy.className="battleFighter";
+
+player.innerText="🥔🛡️";
+enemy.innerText=currentEnemyEmoji+"⚔️";
+
 document.getElementById("battleResult")
-.innerText="";
+.innerText="⚔️ FINAL ATTACK!";
 
-document.getElementById("animationMessage")
+document.getElementById("battleResult")
+.className="";
+
+document.getElementById("battleMessage")
 .innerText=
-"🥔 POTATO NATION ATTACKS!";
+"🥔 THE POTATO ARMY CHARGES!";
 
-player.className="fighter";
-enemy.className="fighter";
 
-player.style.left="8%";
-enemy.style.right="8%";
+/* CHARGE */
 
 setTimeout(()=>{
 
-player.classList.add("battleMovePlayer");
+player.classList.add("playerCharge");
 
-},300);
-
-setTimeout(()=>{
-
-createExplosion(50,50,"💥");
-
-document.getElementById("animationMessage")
+document.getElementById("battleMessage")
 .innerText=
-"💥 DIRECT HIT!";
+"🥔 CHAAAAAAAAARGE!";
 
-enemy.classList.add("battleMoveEnemy");
+},400);
 
-},900);
+
+/* CLASH */
 
 setTimeout(()=>{
 
-enemy.innerText="💫";
+enemy.classList.add("enemyCharge");
 
-document.getElementById("animationMessage")
+createBattleExplosion(
+50,
+45,
+"💥"
+);
+
+field.classList.add("battleShake");
+
+document.getElementById("battleMessage")
+.innerText=
+"💥 MASSIVE CLASH!";
+
+setTimeout(()=>{
+field.classList.remove("battleShake");
+},600);
+
+},1100);
+
+
+/* ENEMY GETS DESTROYED */
+
+setTimeout(()=>{
+
+enemy.innerText="💀";
+
+createBattleExplosion(
+75,
+45,
+"💥"
+);
+
+document.getElementById("battleMessage")
 .innerText=
 "😭 THE ENEMY IS RETREATING!";
 
-},1500);
+},1800);
+
+
+/* VICTORY */
 
 setTimeout(()=>{
 
@@ -1425,15 +1614,19 @@ document.getElementById("battleResult")
 "🏆 VICTORY!";
 
 document.getElementById("battleResult")
-.className="victoryText";
+.className=
+"victoryBattle";
 
-document.getElementById("animationMessage")
+document.getElementById("battleMessage")
 .innerText=
 "🥔 POTATO NATION WINS THE WAR!";
 
-createConfetti();
+createBattleConfetti();
 
-},2100);
+},2500);
+
+
+/* RETURN */
 
 setTimeout(()=>{
 
@@ -1449,20 +1642,19 @@ happiness+=8;
 safety+=12;
 
 clamp();
-
 updateUI();
 
 if(!checkWin())
 newEvent();
 
-},4200);
+},4800);
 
 }
 
 
-/* =========================================
-   WAR DEFEAT ANIMATION
-========================================= */
+/* ========================================
+   💀 WAR DEFEAT ANIMATION
+======================================== */
 
 function showWarDefeatAnimation(){
 
@@ -1474,6 +1666,9 @@ attackAllowed=false;
 let screen=
 document.getElementById("warAnimation");
 
+let field=
+document.getElementById("battlefield");
+
 let player=
 document.getElementById("playerFighter");
 
@@ -1482,74 +1677,113 @@ document.getElementById("enemyFighter");
 
 screen.classList.remove("hidden");
 
+player.className="battleFighter";
+enemy.className="battleFighter";
+
+player.innerText="🥔🛡️";
+enemy.innerText=currentEnemyEmoji+"⚔️";
+
 document.getElementById("battleResult")
-.innerText="";
+.innerText="⚔️ FINAL BATTLE!";
 
-document.getElementById("animationMessage")
+document.getElementById("battleResult")
+.className="";
+
+document.getElementById("battleMessage")
 .innerText=
-"😈 THE ENEMY COUNTERATTACKS!";
+"🚨 THE ENEMY COUNTERATTACKS!";
 
-player.className="fighter";
-enemy.className="fighter";
 
-player.style.left="8%";
-enemy.style.right="8%";
+/* ENEMY CHARGE */
 
 setTimeout(()=>{
 
-enemy.classList.add("battleMoveEnemy");
+enemy.classList.add("enemyCharge");
 
-},300);
-
-setTimeout(()=>{
-
-createExplosion(50,50,"💥");
-
-document.getElementById("animationMessage")
+document.getElementById("battleMessage")
 .innerText=
-"💥 BOOM!";
+"😈 ENEMY CHARGE!";
 
-player.classList.add("battleMovePlayer");
+},400);
 
-},900);
+
+/* IMPACT */
 
 setTimeout(()=>{
 
-player.innerText="💀";
+player.classList.add("playerCharge");
 
-document.getElementById("animationMessage")
+createBattleExplosion(
+50,
+45,
+"💥"
+);
+
+field.classList.add("battleShake");
+
+document.getElementById("battleMessage")
 .innerText=
-"😭 POTATO NATION IS LOSING!";
+"💥 DIRECT HIT!";
 
-document.body.classList.add("shakeScreen");
+setTimeout(()=>{
+field.classList.remove("battleShake");
+},700);
 
-},1500);
+},1100);
+
+
+/* POTATO FALLS */
 
 setTimeout(()=>{
 
-document.body.classList.remove("shakeScreen");
+player.innerText="💀🥔";
 
-let flash=
-document.createElement("div");
+createBattleExplosion(
+25,
+45,
+"💥"
+);
 
-flash.className="defeatFlash";
+document.getElementById("battleMessage")
+.innerText=
+"😭 POTATO NATION IS FALLING!";
 
-screen.appendChild(flash);
+},1800);
+
+
+/* DEFEAT */
+
+setTimeout(()=>{
 
 document.getElementById("battleResult")
 .innerText=
 "💀 DEFEAT!";
 
 document.getElementById("battleResult")
-.className="defeatText";
+.className=
+"defeatBattle";
 
-document.getElementById("animationMessage")
+document.getElementById("battleMessage")
 .innerText=
-"🏳️ THE ENEMY HAS WON!";
+"🏳️ THE ENEMY HAS WON THE WAR!";
 
-},2200);
+field.classList.add("battleShake");
+
+let flash=
+document.createElement("div");
+
+flash.className="defeatFlash";
+
+field.appendChild(flash);
+
+},2500);
+
+
+/* DESTROYED SCREEN */
 
 setTimeout(()=>{
+
+field.classList.remove("battleShake");
 
 screen.classList.add("hidden");
 
@@ -1559,57 +1793,64 @@ document.getElementById("gameScreen")
 document.getElementById("destroyedScreen")
 .classList.remove("hidden");
 
-},4200);
+},4800);
 
 }
 
 
-/* =========================
+/* ========================================
    EXPLOSION
-========================= */
+======================================== */
 
-function createExplosion(x,y,emoji){
+function createBattleExplosion(x,y,emoji){
 
-let e=
+let explosion=
 document.createElement("div");
 
-e.className="explosion";
+explosion.className=
+"battleExplosion";
 
-e.innerText=emoji;
+explosion.innerText=emoji;
 
-e.style.left=x+"%";
-e.style.top=y+"%";
+explosion.style.left=x+"%";
+explosion.style.top=y+"%";
 
 document
 .getElementById("battlefield")
-.appendChild(e);
+.appendChild(explosion);
 
 setTimeout(()=>{
-e.remove();
+explosion.remove();
 },900);
 
 }
 
 
-/* =========================
+/* ========================================
    CONFETTI
-========================= */
+======================================== */
 
-function createConfetti(){
+function createBattleConfetti(){
 
-let battlefield=
+let field=
 document.getElementById("battlefield");
 
 let emojis=[
-"🎉","🥔","🏆","⭐","🔥","😂"
+"🎉",
+"🥔",
+"🏆",
+"⭐",
+"🔥",
+"😂"
 ];
 
-for(let i=0;i<35;i++){
+for(let i=0;i<40;i++){
 
 let c=
 document.createElement("div");
 
-c.className="confetti";
+c.className=
+"battleConfetti";
 
 c.innerText=
 emojis[
@@ -1620,9 +1861,9 @@ c.style.left=
 Math.random()*100+"%";
 
 c.style.animationDelay=
-Math.random()*.8+"s";
+Math.random()*.7+"s";
 
-battlefield.appendChild(c);
+field.appendChild(c);
 
 setTimeout(()=>{
 c.remove();
@@ -1633,9 +1874,9 @@ c.remove();
 }
 
 
-/* =========================
+/* ========================================
    ECONOMY
-========================= */
+======================================== */
 
 function startMoneyGame(){
 
@@ -1665,7 +1906,6 @@ if(cash>=40){
 economy=35;
 
 clamp();
-
 updateUI();
 
 document.getElementById("moneyGame")
@@ -1678,19 +1918,16 @@ document.getElementById("message")
 .innerText=
 "💰 ECONOMY SAVED!";
 
-setTimeout(
-newEvent,
-700
-);
+setTimeout(newEvent,700);
 
 }
 
 }
 
 
-/* =========================
+/* ========================================
    ELECTION
-========================= */
+======================================== */
 
 function startElection(){
 
@@ -1720,7 +1957,6 @@ document.getElementById("electionResult")
 happiness+=3;
 
 clamp();
-
 updateUI();
 
 if(checkWin())return;
@@ -1752,9 +1988,9 @@ endGame(
 }
 
 
-/* =========================
+/* ========================================
    WIN
-========================= */
+======================================== */
 
 function checkWin(){
 
@@ -1792,9 +2028,9 @@ return false;
 }
 
 
-/* =========================
-   END
-========================= */
+/* ========================================
+   END GAME
+======================================== */
 
 function endGame(
 emoji,
@@ -1820,9 +2056,9 @@ document.getElementById("endText")
 }
 
 
-/* =========================
+/* ========================================
    CLAMP
-========================= */
+======================================== */
 
 function clamp(){
 
@@ -1841,9 +2077,9 @@ Math.max(0,Math.min(100,iq));
 }
 
 
-/* =========================
-   UI
-========================= */
+/* ========================================
+   UPDATE UI
+======================================== */
 
 function updateUI(){
 
@@ -1880,9 +2116,9 @@ document.getElementById("smartBar")
 }
 
 
-/* =========================
-   CERTIFICATE
-========================= */
+/* ========================================
+   DOWNLOAD CERTIFICATE
+======================================== */
 
 function downloadCertificate(){
 
@@ -1900,11 +2136,23 @@ ctx.fillRect(0,0,1200,850);
 
 ctx.strokeStyle="#b8860b";
 ctx.lineWidth=18;
-ctx.strokeRect(25,25,1150,800);
+
+ctx.strokeRect(
+25,
+25,
+1150,
+800
+);
 
 ctx.strokeStyle="#7b4d00";
 ctx.lineWidth=5;
-ctx.strokeRect(50,50,1100,750);
+
+ctx.strokeRect(
+50,
+50,
+1100,
+750
+);
 
 ctx.textAlign="center";
 ctx.fillStyle="#7b4d00";
@@ -1999,6 +2247,7 @@ canvas.toDataURL("image/png");
 link.click();
 
 }
+
 
 updateUI();
 
